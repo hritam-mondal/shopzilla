@@ -1,0 +1,139 @@
+﻿@rendermode InteractiveWebAssembly
+
+<div class="carousel">
+    <div class="carousel-inner">
+        @foreach (var item in carouselItems)
+        {
+            <div class="@(item.IsActive ? "carousel-item active" : "carousel-item")">
+                <div class="px-lg-5 tns-item tns-fadeIn tns-slide-active" style="background-color: @item.BackgroundColor; left: 0%;" id="tns2-item0">
+                    <div class="d-lg-flex justify-content-between align-items-center ps-lg-4">
+                        <img class="d-block order-lg-2 me-lg-n7 flex-shrink-0" src="@item.ImageSrc" alt="@item.ImageAlt">
+                        <div class="position-relative mx-auto me-lg-n5 py-5 px-4 mb-lg-5 order-lg-1" style="max-width: 28rem; z-index: 10;">
+                            <div class="pb-lg-5 mb-lg-5 text-center text-lg-start text-lg-nowrap">
+                                <h3 class="h2 text-dark fw-dark pb-1 from-start">@item.SubTitle</h3>
+                                <h2 class="text-dark display-5 from-start delay-1">@item.Title</h2>
+                                <p class="fs-lg text-dark pb-3 from-start delay-2">@item.Description</p>
+                                <div class="d-table scale-up delay-4 mx-auto mx-lg-0">
+                                    <a class="btn btn-primary" href="#">
+                                        Shop Now &nbsp;
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" width="10px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="carousel-controls">
+        <button class="carousel-control-prev" style="padding-inline-end: 100px;" @onclick="MoveLeft">
+            <svg width="15px" style="color: #333" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
+            </svg>
+        </button>
+        <button class="carousel-control-next" style="padding-inline-start: 100px;" @onclick="MoveRight">
+            <svg width="15px" style="color: #333" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+@code {
+    public class CarouselItem
+    {
+        public string ImageSrc { get; } = string.Empty;
+        public string ImageAlt { get; } = string.Empty;
+        public string BackgroundColor { get; } = string.Empty;
+        public string Title { get; } = string.Empty;
+        public string SubTitle { get; } = string.Empty;
+        public string Description { get; } = string.Empty;
+        public bool IsActive { get; set; }
+
+        public CarouselItem(string imageSrc, string imageAlt, string backgroundColor, string title, string subTitle, string description, bool isActive = false)
+        {
+            ImageSrc = imageSrc;
+            ImageAlt = imageAlt;
+            BackgroundColor = backgroundColor;
+            Title = title;
+            SubTitle = subTitle;
+            Description = description;
+            IsActive = isActive;
+        }
+    }
+
+    public List<CarouselItem> carouselItems { get; set; } = new List<CarouselItem>
+    {
+        new CarouselItem
+        (
+            "images/home/hero-slider/01.jpg",
+            "Summer Collection",
+            "#f4ede5",
+            "Huge Summer Collection",
+            "Has just arrived!",
+            "Swimwear, Tops, Shorts, Sunglasses & much more...",
+            true
+        ),
+        new CarouselItem
+        (
+            "images/home/hero-slider/02.jpg",
+            "Women Sportswear",
+            "#f2f3f5",
+            "Women Sportswear Sale",
+            "Hurry up! Limited time offer.",
+            "Sneakers, Keds, Sweatshirts, Hoodies & much more..."
+        ),
+        new CarouselItem
+        (
+            "images/home/hero-slider/03.jpg",
+            "Men Accessories",
+            "#edf1f4",
+            "New Men's Accessories",
+            "Complete your look with",
+            "Hats & Caps, Sunglasses, Bags & much more..."
+        ),
+    };
+
+    private int activeIndex = 0;
+
+    private void MoveLeft()
+    {
+        activeIndex = (activeIndex - 1 + carouselItems.Count) % carouselItems.Count;
+        UpdateActiveItems();
+    }
+
+    private void MoveRight()
+    {
+        activeIndex = (activeIndex + 1) % carouselItems.Count;
+        UpdateActiveItems();
+    }
+
+    private void UpdateActiveItems()
+    {
+        for (int i = 0; i < carouselItems.Count; i++)
+        {
+            carouselItems[i].IsActive = (i == activeIndex);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await StartSlideshow();
+        }
+    }
+
+    private async Task StartSlideshow()
+    {
+        while (true)
+        {
+            await Task.Delay(5000);
+            MoveRight();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

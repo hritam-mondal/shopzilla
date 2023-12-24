@@ -1,0 +1,121 @@
+﻿@page "/product/{ProductId}"
+@rendermode InteractiveAuto
+@inject HttpClient Http
+@using Shopzilla.Client.Models
+
+<PageTitle>Shop</PageTitle>
+
+<div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+                    <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="bi bi-house"></i>Home</a></li>
+                    <li class="breadcrumb-item text-nowrap">
+                        <a href="#">Shop</a>
+                    </li>
+                    <li class="breadcrumb-item text-nowrap active" aria-current="page">Product Page v.1</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            @if (product != null)
+            {
+                <h1 class="h3 text-light mb-0">@product.ProductName</h1>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @if (product == null)
+    {
+        <p>No product found.</p>
+    }
+    else
+    {
+        <div class="bg-light shadow-lg rounded-3 px-4 py-3 mb-5">
+            <div class="px-lg-3">
+                <div class="row">
+                    <!-- Product gallery-->
+                    <div class="col-lg-7 pe-lg-0 pt-lg-4">
+                        <div class="product-gallery">
+                            <div class="product-gallery-preview order-sm-2">
+                                <div class="product-gallery-preview-item active" id="first">
+                                    <img class="image-zoom" src="images/products/@product.ProductImage" data-zoom="img/shop/single/gallery/01.jpg" alt="Product image">
+                                    <div class="image-zoom-pane"></div>
+                                </div>
+                            </div>
+                            <div class="product-gallery-thumblist order-sm-1">
+                                <a class="product-gallery-thumblist-item active" href="#first">
+                                    <img src="images/products/@product.ProductImage" alt="Product thumb">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Product details-->
+                    <div class="col-lg-5 pt-4 pt-lg-0">
+                        <div class="product-details ms-auto pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <a href="#reviews" data-scroll="">
+                                    <div class="star-rating">
+                                        <i class="star-rating-icon bi bi-star-fill active"></i>
+                                        <i class="star-rating-icon bi bi-star-fill active"></i>
+                                        <i class="star-rating-icon bi bi-star-fill active"></i>
+                                        <i class="star-rating-icon bi bi-star-fill active"></i>
+                                        <i class="star-rating-icon bi bi-star"></i>
+                                    </div><span class="d-inline-block fs-sm text-body align-middle mt-1 ms-1">74 Reviews</span>
+                                </a>
+                                <button class="btn-wishlist me-0 me-lg-n3" type="button" data-bs-toggle="tooltip" aria-label="Add to wishlist" data-bs-original-title="Add to wishlist">
+                                    <svg width="20px" class="text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 19">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <span class="h3 fw-normal text-accent me-1">$@product.Price.ToString().Split('.')[0].<small>@product.Price.ToString().Split('.')[1]</small></span>
+                                <del class="text-muted fs-lg me-3">$25.<small>00</small></del><span class="badge bg-danger badge-shadow align-middle mt-n2">Sale</span>
+                            </div>
+                            <form class="mb-grid-gutter" method="post">
+                                <div class="mb-3 d-flex align-items-center">
+                                    <select class="form-select me-3" style="width: 5rem;">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                    <button class="btn btn-primary btn-shadow d-block w-100" type="submit">
+                                        <svg width="22px" class="text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1" />
+                                        </svg>
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </form>
+                            <h6>Product info</h6>
+                            <p>@product.Description</p>
+                            <!-- Sharing-->
+                            <label class="form-label d-inline-block align-middle my-2 me-3">Share:</label>
+                            <a class="btn-share btn-twitter me-2 my-2" href="#"><i class="bi bi-twitter-x"></i>Twitter</a>
+                            <a class="btn-share btn-instagram me-2 my-2" href="#"><i class="bi bi-instagram"></i>Instagram</a>
+                            <a class="btn-share btn-facebook my-2" href="#"><i class="bi bi-facebook"></i>Facebook</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? ProductId { get; set; }
+
+    private Product? product;
+
+    protected override async Task OnInitializedAsync()
+    {
+        product = await Http.GetFromJsonAsync<Product?>($"api/v1/product/{ProductId}");
+    }
+}

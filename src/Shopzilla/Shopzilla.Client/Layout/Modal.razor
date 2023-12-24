@@ -1,0 +1,10 @@
+﻿<div class="modal" style="display: @(IsVisible ? "block" : "none")">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool IsVisible { get; set; }
+}
